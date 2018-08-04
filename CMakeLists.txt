@@ -45,6 +45,7 @@ set(LIBS
   ${OPENGL_LIBRARY}
   engine
   glfw
+	soil
   GLEW_210
 )
 

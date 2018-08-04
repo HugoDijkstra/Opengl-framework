@@ -85,9 +85,14 @@ public:
 
 	void Update()
 	{
-		glm::mat4 positionMatrix = glm::translate(glm::mat4(0), (glm::vec3)position);
+		/*glm::mat4 positionMatrix = glm::translate(glm::mat4(0), (glm::vec3)position);
 		glm::mat4 rotationMatrix = glm::eulerAngleXYX(eulerRotation.x, eulerRotation.y, eulerRotation.z);
-		cameraMatrix = positionMatrix * rotationMatrix;
+		cameraMatrix = positionMatrix * rotationMatrix;*/
+		cameraMatrix = glm::lookAt(
+			glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
+			glm::vec3(0, 0, 0), // and looks at the origin
+			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+		);
 	}
 private:
 };

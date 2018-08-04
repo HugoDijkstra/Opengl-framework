@@ -52,3 +52,16 @@ target_link_libraries(GLEW_210
 	${OPENGL_LIBRARY}
 	${EXTRA_LIBS}
 )
+
+add_library(soil
+	soil/image_DXT.c
+	soil/image_DXT.h
+	soil/image_helper.c
+	soil/image_helper.h
+	soil/SOIL.c
+	soil/SOIL.c
+	soil/stb_image_aug.c
+	soil/stb_image_aug.h
+	soil/stbi_DDS_aug_c.h
+	soil/stbi_DDS_aug.h
+)
