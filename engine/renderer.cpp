@@ -40,7 +40,7 @@ GLuint Shader::GetPropertyID(std::string propertyName) {
 		}
 		else
 		{
-			properties[propertyName] =  locationID;
+			properties[propertyName] = locationID;
 		}
 		return locationID;
 	}
@@ -81,6 +81,11 @@ Renderer::Renderer()
 	projectionMatrix = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+
+	camera.position = Vector3(0, 0, 0);
+	camera.eulerRotation = Vector3(0, 0, 0);
+	camera.Update();
+	
 }
 
 Renderer::~Renderer()
@@ -94,11 +99,14 @@ void Renderer::SwapBuffer()
 	glfwSwapBuffers(window);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glfwPollEvents();
+	camera.Update();
 }
 
 void Renderer::RenderMesh(Mesh* mesh, glm::mat4 mvp)
 {
 	glEnableVertexAttribArray(0);
+	glm::mat4 _mvp = projectionMatrix * camera.cameraMatrix * glm::mat4(1);
+	GetShader("Default").SetMatrix4("MVP", _mvp);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->VertexBuffer());
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glDrawArrays(GL_TRIANGLES, 0, 3);

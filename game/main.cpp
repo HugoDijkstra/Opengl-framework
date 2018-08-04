@@ -9,9 +9,11 @@ int main()
 	Shader s = renderer->GetShader("Default"); //name is Default (iew)
 	s.Use(); //name
 	s.SetVector3("ColorIn", 0, 1, 0); // nice
+
+	renderer->camera.position = Vector3(0, 0, 0);
 	do {
-		renderer->RenderMesh(mesh, glm::mat4()); //iew
-		renderer->SwapBuffer(); 
+		renderer->RenderMesh(mesh, glm::mat4(1)); //iew
+		renderer->SwapBuffer();
 	} while (glfwGetKey(renderer->Window(), GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(renderer->Window()) == 0);
-} 
+}
 

@@ -1,6 +1,8 @@
 #ifndef _RENDERER
 #define _RENDERER
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 //Standard libraries
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +20,7 @@
 #include <glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 //Engine includes
 #include <mesh.h>
@@ -74,9 +77,19 @@ private:
 
 };
 
-struct Camera {
+class Camera {
+public:
 	Vector3 position;
 	Vector3 eulerRotation;
+	glm::mat4 cameraMatrix;
+
+	void Update()
+	{
+		glm::mat4 positionMatrix = glm::translate(glm::mat4(0), (glm::vec3)position);
+		glm::mat4 rotationMatrix = glm::eulerAngleXYX(eulerRotation.x, eulerRotation.y, eulerRotation.z);
+		cameraMatrix = positionMatrix * rotationMatrix;
+	}
+private:
 };
 
 class Renderer
@@ -88,6 +101,7 @@ public:
 
 	void SwapBuffer();
 	void RenderMesh(Mesh * mesh, glm::mat4 mvp);
+	Camera camera;
 	Shader GetShader(std::string name);
 	GLFWwindow* Window() { return window; }
 	void CreateShader(std::string shaderName, std::string vertexPath, std::string fragmentPath);
