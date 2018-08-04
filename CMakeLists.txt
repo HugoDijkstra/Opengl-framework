@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(openglFramework)
 
 
+set(BUILD_SHARED_LIBS FALSE)
 
 if(UNIX)
 	#set(CMAKE_CXX_FLAGS "-Wall -std=c++0x -pedantic -O2 -g -pg")
@@ -60,8 +61,8 @@ add_library(engine
   engine/renderer.h
   engine/mesh.cpp
   engine/mesh.h
-	engine/vector3.cpp
-	engine/vector3.h
+  engine/vector3.cpp
+  engine/vector3.h
 )
 add_executable(game
   game/main.cpp
