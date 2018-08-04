@@ -1,5 +1,44 @@
 #include <renderer.h>
 
+GLuint Shader::GetPropertyID(std::string propertyName) {
+	Use();
+	if (properties.size() > 0) {
+		std::map<std::string, GLuint>::iterator it = properties.find(propertyName);
+		GLuint location;
+		if (it == properties.end())
+		{
+			GLuint locationID = glGetUniformLocation(shaderID, propertyName.c_str());
+
+			if (locationID == -1) {
+				std::cout << "Could not find property: " << propertyName << " in shader " << name << std::endl;
+				return -1;
+			}
+			else
+			{
+				properties.emplace(propertyName, locationID);
+				location = locationID;
+			}
+			return location;
+
+			return (*it).second;
+		}
+	}
+	else
+	{
+		GLuint locationID = glGetUniformLocation(shaderID, propertyName.c_str());
+
+		if (locationID == -1) {
+			std::cout << "Could not find property: " << propertyName << " in shader " << name << std::endl;
+			return -1;
+		}
+		else
+		{
+			properties.emplace(propertyName, locationID);
+		}
+		return locationID;
+	}
+	return -1;
+}
 Renderer::Renderer()
 {
 	glewExperimental = true;
@@ -30,9 +69,9 @@ Renderer::Renderer()
 		glfwTerminate();
 		exit(-1);
 	}
-
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 	projectionMatrix = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
-
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 }
@@ -77,12 +116,13 @@ void Renderer::CreateShader(std::string shaderName, std::string vertexPath, std:
 {
 	Shader s;
 	s.shaderID = LoadShaders(vertexPath.c_str(), fragmentPath.c_str());
+	s.name = shaderName;
 	if (s.shaderID == 0)
 	{
-		std::cout << "Shader: " << shaderName << "Could not be created" << std::endl;
+		std::cout << "Shader: " << s.name << "Could not be created" << std::endl;
 		return;
 	}
-	std::cout << "ShaderID: " << s.shaderID << std::endl;
+	std::cout << "Shader created: " << s.shaderID << " : " << s.name << std::endl;
 
 	shaders.emplace(shaderName, s);
 }

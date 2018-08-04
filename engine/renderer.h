@@ -23,11 +23,54 @@
 #include <mesh.h>
 #include <vector3.h>
 
-struct Shader {
+class Shader {
+public:
+	//Variables
+	std::string name;
 	GLuint shaderID;
+	std::map<std::string, GLuint> properties;
+
+	//Functions
 	void Use() {
+		std::cout << "Now using: " << name << std::endl;
 		glUseProgram(shaderID);
 	}
+
+	void SetInt(std::string propertyName, int i)
+	{
+		GLuint location = GetPropertyID(propertyName);
+		if (location == -1)
+		{
+			return;
+		}
+		glUniform1i(location, i);
+
+	}
+
+	void SetVector3(std::string propertyName, int x, int y, int z)
+	{
+		GLuint location = GetPropertyID(propertyName);
+		if (location == -1)
+		{
+			return;
+		}
+		glUniform3f(location, x, y, z);
+
+
+	}
+
+	void SetMatrix4(std::string propertyName, const glm::mat4 i)
+	{
+		GLuint location = GetPropertyID(propertyName);
+		if (location == -1)
+		{
+			return;
+		}
+		glUniformMatrix4fv(location, 1, GL_FALSE, &i[0][0]);
+	}
+private:
+	GLuint GetPropertyID(std::string propertyName);
+
 };
 
 struct Camera {
