@@ -34,21 +34,14 @@ set(OPENGL_LIBRARY
 )
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
-#GLEW_210
-set(GLEW_SOURCE
-  glew-2.1.0/src/glew.c
+#GLAD
+add_library(GLAD STATIC
+	glad/include/glad.c
+	glad/include/glad.h
+	glad/include/khrplatform.h
 )
 
-set(GLEW_HEADERS
-)
-
-
-add_library( GLEW_210 STATIC
-	${GLEW_SOURCE}
-	${GLEW_INCLUDE}
-)
-
-target_link_libraries(GLEW_210
+target_link_libraries(GLAD
 	${OPENGL_LIBRARY}
 	${EXTRA_LIBS}
 )

@@ -27,7 +27,7 @@ find_package(OpenGL REQUIRED)
 add_subdirectory("externals")
 include_directories(
   ${CMAKE_SOURCE_DIR}/externals/glfw-3.2.1/include/GLFW
-  ${CMAKE_SOURCE_DIR}/externals/glew-2.1.0/include
+  ${CMAKE_SOURCE_DIR}/externals/glad/include
   ${CMAKE_SOURCE_DIR}/externals/glm-0.9.9.0
   ${CMAKE_SOURCE_DIR}/externals
   ${CMAKE_SOURCE_DIR}/engine
@@ -36,7 +36,7 @@ include_directories(
 
 link_directories(
   ${CMAKE_SOURCE_DIR}/externals/glfw-3.2.1/src
-  ${CMAKE_SOURCE_DIR}/externals/glew-2.1.0
+  ${CMAKE_SOURCE_DIR}/externals/glad
   ${CMAKE_SOURCE_DIR}/externals
   ${CMAKE_SOURCE_DIR}/engine
 )
@@ -46,7 +46,7 @@ set(LIBS
   engine
   glfw
 	soil
-  GLEW_210
+  GLAD
 )
 
 add_definitions(

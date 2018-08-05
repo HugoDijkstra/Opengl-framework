@@ -14,7 +14,7 @@
 #include <map> 
 
 //include glew first
-#include <GL/glew.h>
+#include <glad.h>
 
 //include glfw and glm after
 #include <glfw3.h>

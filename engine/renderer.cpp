@@ -48,7 +48,6 @@ GLuint Shader::GetPropertyID(std::string propertyName) {
 }
 Renderer::Renderer()
 {
-	glewExperimental = true;
 	if (!glfwInit())
 	{
 		std::cout << "unable to start glew" << std::endl;
@@ -69,10 +68,9 @@ Renderer::Renderer()
 	}
 
 	glfwMakeContextCurrent(window);
-	glewExperimental = true;
-	if (glewInit() != GLEW_OK)
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Could not start glew" << std::endl;
+		std::cout << "Could not start glad" << std::endl;
 		glfwTerminate();
 		exit(-1);
 	}

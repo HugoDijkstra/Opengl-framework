@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 //Opengl libraries
-#include <GL/glew.h>
+#include <glad.h>
 #include <glfw3.h>
 #include <glm/glm.hpp>
 

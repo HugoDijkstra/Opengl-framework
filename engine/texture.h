@@ -5,7 +5,7 @@
 #include <string>
 
 //GL libraries
-#include <gl/glew.h>
+#include <glad.h>
 #include <glfw3.h>
 
 //Soil
