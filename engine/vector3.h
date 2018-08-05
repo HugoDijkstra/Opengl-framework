@@ -19,6 +19,7 @@ public:
 
 	// Operators
 	Vector3 &operator+=(const Vector3 &oth);
+	Vector3 &operator+=(const glm::vec3 &oth);
 
 	Vector3 &operator-=(const Vector3 &oth);
 

@@ -108,17 +108,13 @@ void Renderer::RenderMesh(Mesh* mesh, glm::mat4 mvp)
 	glm::mat4 _mvp = projectionMatrix * camera.cameraMatrix * glm::mat4(1);
 
 	Shader s = *mesh->shader;
-	s.SetMatrix4("MVP", _mvp);
+	s.SetMatrix4("MVP", mvp);
 	s.Use();
 
-	glfwload
-
 	//Render
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->VertexBuffer());
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
-	glDisableVertexAttribArray(0);
+	glBindVertexArray(mesh->VertexArrayID());
+	glDrawElements(GL_TRIANGLES, mesh->Indices().size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 
 Shader Renderer::GetShader(std::string name)

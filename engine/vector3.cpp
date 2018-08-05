@@ -20,6 +20,15 @@ Vector3 & Vector3::operator+=(const Vector3 & oth)
 	return *this;
 }
 
+Vector3 & Vector3::operator+=(const glm::vec3 & oth)
+{
+	x += oth.x;
+	y += oth.y;
+	z += oth.z;
+
+	return *this;
+}
+
 Vector3 & Vector3::operator-=(const Vector3 & oth)
 {
 	x -= oth.x;

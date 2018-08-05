@@ -62,6 +62,9 @@ add_library(engine
   engine/renderer.h
   engine/mesh.cpp
   engine/mesh.h
+	engine/texture.cpp
+	engine/texture.h
+	engine/utils.hpp
   engine/vector3.cpp
   engine/vector3.h
 )
@@ -76,5 +79,10 @@ target_link_libraries(game
 #copy shaders
 file(
 	COPY ${CMAKE_SOURCE_DIR}/engine/shaders
+	DESTINATION ${CMAKE_BINARY_DIR}
+)
+
+file(
+	COPY ${CMAKE_SOURCE_DIR}/engine/assets
 	DESTINATION ${CMAKE_BINARY_DIR}
 )

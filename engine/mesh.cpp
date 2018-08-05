@@ -1,5 +1,26 @@
 #include <mesh.h>
 
+
+
+std::vector<std::string> Split(std::string str, char splitAt) {
+	std::vector<std::string> toReturn;
+	std::string currentString = "";
+	for (int i = 0; i < str.length(); i++)
+	{
+		if (str[i] != splitAt)
+		{
+			currentString = currentString + str[i];
+		}
+		else
+		{
+			toReturn.push_back(currentString);
+			currentString = "";
+		}
+	}
+	toReturn.push_back(currentString);
+	return toReturn;
+
+}
 Mesh::Mesh()
 {
 	glGenVertexArrays(1, &vertexArrayID);
@@ -21,6 +42,126 @@ Mesh::Mesh(Shader * s)
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
 	shader = s;
+}
+
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
+{
+	//VAO
+	glGenVertexArrays(1, &vertexArrayID);
+	glBindVertexArray(vertexArrayID);
+
+	//VBO
+	glGenBuffers(1, &vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+
+	//EBO
+	glGenBuffers(1, &elementBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+
+	//Set vertex atribbs
+	//vertex
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	//normals
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+	//uv
+	//glEnableVertexAttribArray(2);
+	//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uvCoord));
+
+	glBindVertexArray(0);
+
+	this->vertices = vertices;
+	this->indices = indices;
+	shader = NULL;
+}
+
+Mesh* Mesh::LoadMesh(std::string path)
+{
+	std::ifstream reader;
+	reader.open(path);
+	if (reader.is_open()) {
+		//variables for mesh
+		int v = 0, i = 0, n = 0, t = 0;
+		std::string name = "";
+		std::vector<Vertex> vertices;
+		std::vector<glm::vec2> uvs;
+		std::vector<glm::vec3> normals;
+		std::vector<unsigned int> indices;
+		std::vector<glm::vec2> uvsInOrder;
+		std::string line;
+		while (std::getline(reader, line))
+		{
+			char second = line[1];
+			switch (line[0]) {
+			case 'v':
+			{
+				if (second == 't')
+				{
+					std::vector<std::string> splitString = Split(line, ' ');
+					glm::vec2 uv;
+					uv.x = std::stof(splitString[1]);
+					uv.y = std::stof(splitString[2]);
+					uvs.push_back(uv);
+					t++;
+				}
+				else if (second == 'n')
+				{
+					std::vector<std::string> splitString = Split(line, ' ');
+					glm::vec3  normal;
+					normal.x = std::stof(splitString[1]);
+					normal.y = std::stof(splitString[2]);
+					normal.z = std::stof(splitString[3]);
+					normals.push_back(normal);
+					n++;
+				}
+				else if (second == ' ')
+				{
+					Vertex vert;
+					std::vector<std::string> splitString = Split(line, ' ');
+					vert.postion.x = std::stof(splitString[1]);
+					vert.postion.y = std::stof(splitString[2]);
+					vert.postion.z = std::stof(splitString[3]);
+					vertices.push_back(vert);
+					v++;
+				}
+				break;
+			}
+			case 'f': {
+				std::vector<std::string> splitString = Split(line, ' ');
+				for (int i = 1; i < splitString.size(); i++) {
+					std::vector<std::string> splitParts = Split(splitString[i], '/');
+					int vertextmp = std::stoi(splitParts[0]) - 1;
+					indices.push_back(vertextmp);
+					uvsInOrder.push_back(uvs[std::stoi(splitParts[1]) - 1]);
+					vertices[vertextmp].normal += normals[std::stoi(splitParts[1]) - 1];
+					vertices[vertextmp].normalAmount++;
+					i++;
+				}
+				break;
+			}
+			case 'o':
+				name = line.substr(2, line.length() - 2);
+				break;
+			}
+		}
+
+		for (int i = 0; i < vertices.size(); i++)
+		{
+			vertices[i].normal /= vertices[i].normalAmount;
+		}
+		std::cout << "Name: " << name << "\nVertices: " << vertices.size() << "\nUvs: " << uvsInOrder.size() << "\nNormals: " << normals.size() << std::endl;
+		Mesh* newMesh = new Mesh(vertices, indices);
+		return newMesh;
+	}
+	else
+	{
+		std::cout << "Could not open obj file: " << path << std::endl;
+	}
+	return NULL;
 }
 
 Mesh::~Mesh()
