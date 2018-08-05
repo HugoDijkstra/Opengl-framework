@@ -61,6 +61,7 @@ class Texture;
 struct Vertex {
 	Vector3 postion;
 	Vector3 normal;
+	glm::vec2 uv;
 	int normalAmount;
 };
 

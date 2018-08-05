@@ -8,10 +8,11 @@ uniform vec3 ColorIn;
 uniform mat4 MVP;
 
 out vec2 UV;
-
+out vec3 pos;
 void main()
 {
   gl_Position = MVP * vec4(vertexPosition_modelspace,1);
-  gl_Normal = normal;
+  //gl_Normal = normal;
   UV = vertexUV;
+  pos = vertexPosition_modelspace;
 }

@@ -58,6 +58,8 @@ add_definitions(
 )
 
 add_library(engine
+	engine/input.cpp
+	engine/input.h
   engine/renderer.cpp
   engine/renderer.h
   engine/mesh.cpp

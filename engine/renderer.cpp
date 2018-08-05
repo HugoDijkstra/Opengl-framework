@@ -60,7 +60,7 @@ Renderer::Renderer()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(640, 480, "Hello world", NULL, NULL);
+	window = glfwCreateWindow(1920, 1080, "Hello world", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Could not create window" << std::endl;
@@ -78,13 +78,14 @@ Renderer::Renderer()
 	}
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	projectionMatrix = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
+	projectionMatrix = glm::perspective(glm::radians(30.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	camera.position = Vector3(0, 0, 0);
 	camera.eulerRotation = Vector3(0, 0, 0);
 	camera.Update();
+	glEnable(GL_CULL_FACE);
 	
 }
 
@@ -108,8 +109,8 @@ void Renderer::RenderMesh(Mesh* mesh, glm::mat4 mvp)
 	glm::mat4 _mvp = projectionMatrix * camera.cameraMatrix * glm::mat4(1);
 
 	Shader s = *mesh->shader;
-	s.SetMatrix4("MVP", mvp);
 	s.Use();
+	s.SetMatrix4("MVP", _mvp);
 
 	//Render
 	glBindVertexArray(mesh->VertexArrayID());

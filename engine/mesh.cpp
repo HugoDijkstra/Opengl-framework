@@ -69,8 +69,8 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 	//uv
-	//glEnableVertexAttribArray(2);
-	//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uvCoord));
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 
 	glBindVertexArray(0);
 
@@ -91,7 +91,6 @@ Mesh* Mesh::LoadMesh(std::string path)
 		std::vector<glm::vec2> uvs;
 		std::vector<glm::vec3> normals;
 		std::vector<unsigned int> indices;
-		std::vector<glm::vec2> uvsInOrder;
 		std::string line;
 		while (std::getline(reader, line))
 		{
@@ -125,6 +124,7 @@ Mesh* Mesh::LoadMesh(std::string path)
 					vert.postion.x = std::stof(splitString[1]);
 					vert.postion.y = std::stof(splitString[2]);
 					vert.postion.z = std::stof(splitString[3]);
+					std::cout << vert.postion.x << " " << vert.postion.y << " " << vert.postion.z <<std::endl;
 					vertices.push_back(vert);
 					v++;
 				}
@@ -132,14 +132,14 @@ Mesh* Mesh::LoadMesh(std::string path)
 			}
 			case 'f': {
 				std::vector<std::string> splitString = Split(line, ' ');
+
 				for (int i = 1; i < splitString.size(); i++) {
 					std::vector<std::string> splitParts = Split(splitString[i], '/');
 					int vertextmp = std::stoi(splitParts[0]) - 1;
 					indices.push_back(vertextmp);
-					uvsInOrder.push_back(uvs[std::stoi(splitParts[1]) - 1]);
+					vertices[vertextmp].uv = uvs[std::stoi(splitParts[1]) - 1];
 					vertices[vertextmp].normal += normals[std::stoi(splitParts[1]) - 1];
 					vertices[vertextmp].normalAmount++;
-					i++;
 				}
 				break;
 			}
@@ -153,8 +153,10 @@ Mesh* Mesh::LoadMesh(std::string path)
 		{
 			vertices[i].normal /= vertices[i].normalAmount;
 		}
-		std::cout << "Name: " << name << "\nVertices: " << vertices.size() << "\nUvs: " << uvsInOrder.size() << "\nNormals: " << normals.size() << std::endl;
+
+		std::cout << "Name: " << name << "\nVertices: " << vertices.size() << "\nUvs: " << uvs.size() << "\nNormals: " << normals.size() << "\nIndices: " << indices.size() << std::endl;
 		Mesh* newMesh = new Mesh(vertices, indices);
+		newMesh->name = name;
 		return newMesh;
 	}
 	else

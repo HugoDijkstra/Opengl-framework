@@ -19,7 +19,9 @@ public:
 	Texture(std::string path);
 	virtual ~Texture();
 
-	int widht, height;
+	int width, height;
+
+	GLuint TextureID() { return textureID; }
 private:
 	GLuint textureID;
 };
