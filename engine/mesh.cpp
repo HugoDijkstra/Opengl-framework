@@ -120,6 +120,7 @@ Mesh* Mesh::LoadMesh(std::string path)
 				else if (second == ' ')
 				{
 					Vertex vert;
+					vert.normalAmount = 0;
 					std::vector<std::string> splitString = Split(line, ' ');
 					vert.postion.x = std::stof(splitString[1]);
 					vert.postion.y = std::stof(splitString[2]);
