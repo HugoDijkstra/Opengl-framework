@@ -16,6 +16,11 @@
 #include <vector3.h>
 #include <utils.hpp>
 
+//Include Assimp
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 static const GLfloat triangle[] = {
 	-1.0f,-1.0f,-1.0f, // triangle 1 : begin
 	-1.0f,-1.0f, 1.0f,
@@ -59,8 +64,8 @@ class Shader;
 class Texture;
 
 struct Vertex {
-	Vector3 postion;
-	Vector3 normal;
+	glm::vec3 position;
+	glm::vec3 normal;
 	glm::vec2 uv;
 	int normalAmount;
 };
@@ -82,11 +87,13 @@ public:
 
 	Shader* shader;
 
-	static Mesh* LoadMesh(std::string);
+	static Mesh* LoadMesh(std::string path);
 
 	std::vector<Vertex> Vertices() { return vertices; }
 	std::vector<unsigned int> Indices() { return indices; }
+
 private:
+	static Assimp::Importer importer;
 	GLuint vertexArrayID;
 	GLuint vertexBuffer;
 	GLuint elementBuffer;

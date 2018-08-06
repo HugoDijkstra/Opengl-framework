@@ -2,21 +2,16 @@ if(MSVC AND NOT "${MSVC_VERSION}" LESS 1400)
 	add_definitions( "/MP" )
 endif()
 
-
-add_definitions(
-	-DTW_STATIC
-	-DTW_NO_LIB_PRAGMA
-	-DTW_NO_DIRECT3D
-	-DGLEW_STATIC
-	-D_CRT_SECURE_NO_WARNINGS
-)
-
 #GLFW_321
 add_subdirectory(glfw-3.2.1)
+#Assimp
+add_subdirectory(assimp-4.1.0)
 
 include_directories(
     glfw-3.2.1/include/GLFW
     glew-2.1.0/include/
+	${Assimp_SOURCE_DIR}/include
+    ${Assimp_SOURCE_DIR}/code
 )
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -57,4 +52,8 @@ add_library(soil
 	soil/stb_image_aug.h
 	soil/stbi_DDS_aug_c.h
 	soil/stbi_DDS_aug.h
+)
+
+target_link_libraries(soil
+	GLAD
 )

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(openglFramework)
 
 
-set(BUILD_SHARED_LIBS FALSE)
+OPTION(BUILD_SHARED_LIBS OFF)
 
 if(UNIX)
 	#set(CMAKE_CXX_FLAGS "-Wall -std=c++0x -pedantic -O2 -g -pg")
@@ -17,6 +17,7 @@ if(UNIX)
 endif(UNIX)
 
 
+
 if(WIN32)
 	# suppress pedantic warnings
 	add_definitions( "/W1 /D_CRT_SECURE_NO_WARNINGS /wd4514 /nologo" )
@@ -25,13 +26,17 @@ endif(WIN32)
 find_package(OpenGL REQUIRED)
 
 add_subdirectory("externals")
+
 include_directories(
-  ${CMAKE_SOURCE_DIR}/externals/glfw-3.2.1/include/GLFW
+	${CMAKE_SOURCE_DIR}/externals/glfw-3.2.1/include/GLFW
+  ${CMAKE_SOURCE_DIR}/externals/assimp-4.1.0/include
   ${CMAKE_SOURCE_DIR}/externals/glad/include
   ${CMAKE_SOURCE_DIR}/externals/glm-0.9.9.0
   ${CMAKE_SOURCE_DIR}/externals
   ${CMAKE_SOURCE_DIR}/engine
   ${CMAKE_SOURCE_DIR}/.
+  ${Assimp_SOURCE_DIR}/include
+  ${Assimp_SOURCE_DIR}/code
 )
 
 link_directories(
@@ -39,22 +44,20 @@ link_directories(
   ${CMAKE_SOURCE_DIR}/externals/glad
   ${CMAKE_SOURCE_DIR}/externals
   ${CMAKE_SOURCE_DIR}/engine
+  ${Assimp_BINARY_DIR}/code/
+  ${Assimp_BINARY_DIR}
+  
 )
 
 set(LIBS
   ${OPENGL_LIBRARY}
   engine
   glfw
-	soil
+  soil
   GLAD
-)
-
-add_definitions(
-	-DTW_STATIC
-	-DTW_NO_LIB_PRAGMA
-	-DTW_NO_DIRECT3D
-	-DGLEW_STATIC
-	-D_CRT_SECURE_NO_WARNINGS
+  assimp
+  assimp-vc140-mt
+  ${ASSIMP_LIBRARIES}
 )
 
 add_library(engine
@@ -70,8 +73,13 @@ add_library(engine
   engine/vector3.cpp
   engine/vector3.h
 )
+
 add_executable(game
   game/main.cpp
+)
+
+target_link_libraries(engine
+  ${ASSIMP_LIBRARIES}
 )
 
 target_link_libraries(game

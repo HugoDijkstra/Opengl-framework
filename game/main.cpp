@@ -10,7 +10,7 @@ int main()
 	s.SetVector3("ColorIn", 1, 1, 1);
 	Texture t("assets/cat.jpg");
 	s.SetInt("textureIn", 0);
-	Mesh* mesh = Mesh::LoadMesh("assets/monkey.obj");
+	Mesh* mesh = Mesh::LoadMesh("assets/cube.obj");
 
 	mesh->shader = &s;
 

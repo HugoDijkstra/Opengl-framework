@@ -64,7 +64,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 	//Set vertex atribbs
 	//vertex
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 	//normals
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
@@ -79,7 +79,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 	shader = NULL;
 }
 
-Mesh* Mesh::LoadMesh(std::string path)
+/*Mesh* Mesh::LoadMesh(std::string path)
 {
 	std::ifstream reader;
 	reader.open(path);
@@ -104,6 +104,9 @@ Mesh* Mesh::LoadMesh(std::string path)
 					glm::vec2 uv;
 					uv.x = std::stof(splitString[1]);
 					uv.y = std::stof(splitString[2]);
+					if (t < v) {
+						vertices[t].uv = uv;
+					}
 					uvs.push_back(uv);
 					t++;
 				}
@@ -122,10 +125,9 @@ Mesh* Mesh::LoadMesh(std::string path)
 					Vertex vert;
 					vert.normalAmount = 0;
 					std::vector<std::string> splitString = Split(line, ' ');
-					vert.postion.x = std::stof(splitString[1]);
-					vert.postion.y = std::stof(splitString[2]);
-					vert.postion.z = std::stof(splitString[3]);
-					std::cout << vert.postion.x << " " << vert.postion.y << " " << vert.postion.z <<std::endl;
+					vert.position.x = std::stof(splitString[1]);
+					vert.position.y = std::stof(splitString[2]);
+					vert.position.z = std::stof(splitString[3]);
 					vertices.push_back(vert);
 					v++;
 				}
@@ -138,9 +140,9 @@ Mesh* Mesh::LoadMesh(std::string path)
 					std::vector<std::string> splitParts = Split(splitString[i], '/');
 					int vertextmp = std::stoi(splitParts[0]) - 1;
 					indices.push_back(vertextmp);
-					vertices[vertextmp].uv = uvs[std::stoi(splitParts[1]) - 1];
-					vertices[vertextmp].normal += normals[std::stoi(splitParts[1]) - 1];
-					vertices[vertextmp].normalAmount++;
+					//vertices[vertextmp].uv = uvs[std::stoi(splitParts[1]) - 1];
+					//vertices[vertextmp].normal += normals[std::stoi(splitParts[1]) - 1];
+					//vertices[vertextmp].normalAmount++;
 				}
 				break;
 			}
@@ -165,7 +167,7 @@ Mesh* Mesh::LoadMesh(std::string path)
 		std::cout << "Could not open obj file: " << path << std::endl;
 	}
 	return NULL;
-}
+}*/
 
 Mesh::~Mesh()
 {
@@ -182,4 +184,20 @@ void Mesh::Draw()
 
 void Mesh::SetVertices(std::vector<GLfloat> vertices)
 {
+}
+
+Mesh * Mesh::LoadMesh(std::string path)
+{
+	const aiScene* scene = importer.ReadFile(path, aiProcess_CalcTangentSpace |
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices |
+		aiProcess_SortByPType);
+	if (!scene)
+	{
+		std::cout << "Failed to load: " << path << importer.GetErrorString() << std::endl;
+		return NULL;
+	}
+	scene->mMeshes[0]->mVertices;
+		delete scene;
+	return nullptr;
 }

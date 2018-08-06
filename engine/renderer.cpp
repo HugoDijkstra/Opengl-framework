@@ -75,7 +75,6 @@ Renderer::Renderer()
 		exit(-1);
 	}
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
 	projectionMatrix = glm::perspective(glm::radians(30.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
