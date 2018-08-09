@@ -6,6 +6,8 @@
 #include <string>
 #include <glm/glm.hpp>
 
+#include <assimp/vector3.h>
+
 #define PI 3.14159265359
 #define RAD_TO_DEG 57.2957795
 #define DEG_TO_RAD 0.0174532925
@@ -40,6 +42,7 @@ public:
 
 	//type casting
 	operator glm::vec3() { return glm::vec3(x, y, z); };
+	operator aiVector3D()  { return aiVector3D(x, y, z); };
 
 	float magnitude() { return sqrt((x * x) + (y * y) + (z * z)); }
 	float static getAngle(float x, float y) { return atan2(y, x) * 57.2957795; }

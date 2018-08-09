@@ -8,15 +8,17 @@ int main()
 	Shader s = renderer->GetShader("Default");
 	s.Use();
 	s.SetVector3("ColorIn", 1, 1, 1);
-	Texture t("assets/cat.jpg");
+	Texture t("assets/uvTest.jpg");
 	s.SetInt("textureIn", 0);
-	Mesh* mesh = Mesh::LoadMesh("assets/cube.obj");
-
-	mesh->shader = &s;
-
+	std::vector<Mesh*> mesh = Mesh::LoadMeshes("assets/cube.obj");
+	for (int i = 0; i < mesh.size(); i++)
+	{
+		mesh[i]->shader = &s;
+	}
 	renderer->camera.position = Vector3(0, 0, 0);
 	do {
-		renderer->RenderMesh(mesh, glm::mat4(1));
+		for (int i = 0; i < mesh.size(); i++)
+			renderer->RenderMesh(mesh[i], glm::mat4(1));
 		renderer->SwapBuffer();
 	} while (glfwGetKey(renderer->Window(), GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(renderer->Window()) == 0);
 }

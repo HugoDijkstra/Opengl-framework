@@ -75,7 +75,7 @@ Renderer::Renderer()
 		exit(-1);
 	}
 	glEnable(GL_DEPTH_TEST);
-	projectionMatrix = glm::perspective(glm::radians(30.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
+	projectionMatrix = glm::perspective(glm::radians(30.0f), 1920.0f / 1080.0f, 0.1f, 10000.0f);
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
@@ -109,10 +109,13 @@ void Renderer::RenderMesh(Mesh* mesh, glm::mat4 mvp)
 	s.Use();
 	s.SetMatrix4("MVP", _mvp);
 
-	//Render
-	glBindVertexArray(mesh->VertexArrayID());
-	glDrawElements(GL_TRIANGLES, mesh->Indices().size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+
+	if (mesh->Vertices().size() != 0) {
+		//Render
+		glBindVertexArray(mesh->VertexArrayID());
+		glDrawElements(GL_TRIANGLES, mesh->Indices().size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
 }
 
 Shader Renderer::GetShader(std::string name)

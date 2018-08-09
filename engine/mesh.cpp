@@ -1,5 +1,6 @@
 #include <mesh.h>
 
+Assimp::Importer *Mesh::importer = NULL;
 
 
 std::vector<std::string> Split(std::string str, char splitAt) {
@@ -23,14 +24,9 @@ std::vector<std::string> Split(std::string str, char splitAt) {
 }
 Mesh::Mesh()
 {
-	glGenVertexArrays(1, &vertexArrayID);
-	glBindVertexArray(vertexArrayID);
-
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-	shader = NULL;
-
+	vertexArrayID = 0;
+	vertexBuffer = 0;
+	elementBuffer = 0;
 }
 
 Mesh::Mesh(Shader * s)
@@ -188,16 +184,102 @@ void Mesh::SetVertices(std::vector<GLfloat> vertices)
 
 Mesh * Mesh::LoadMesh(std::string path)
 {
-	const aiScene* scene = importer.ReadFile(path, aiProcess_CalcTangentSpace |
+	if (importer == NULL)
+		importer = new Assimp::Importer();
+	const aiScene* scene = importer->ReadFile(path, aiProcess_CalcTangentSpace |
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_SortByPType);
+
 	if (!scene)
 	{
-		std::cout << "Failed to load: " << path << importer.GetErrorString() << std::endl;
+		std::cout << "Failed to load: " << path << importer->GetErrorString() << std::endl;
 		return NULL;
 	}
+	std::vector<Vertex> vertices;
+	for (int i = 0; i < scene->mMeshes[0]->mNumVertices; i++)
+	{
+		aiVector3D vector = scene->mMeshes[0]->mVertices[i];
+		Vertex v;
+		v.position = glm::vec3(vector.x, vector.y, vector.z);
+		if (scene->mMeshes[0]->mTextureCoords[0]) {
+			aiVector3D uv = scene->mMeshes[0]->mTextureCoords[0][i];
+			v.uv = glm::vec2(uv.x, uv.y);
+		}
+		vertices.push_back(v);
+	}
 	scene->mMeshes[0]->mVertices;
-		delete scene;
-	return nullptr;
+
+	std::vector<unsigned int> indices;
+	for (int i = 0; i < scene->mMeshes[0]->mNumFaces; i++)
+	{
+		aiFace face = scene->mMeshes[0]->mFaces[i];
+		for (int f = 0; f < face.mNumIndices; f++)
+		{
+			indices.push_back((unsigned int)face.mIndices[f]);
+		}
+	}
+
+	Mesh* mesh = new Mesh(vertices, indices);
+	;
+	delete scene;
+	return mesh;
+}
+
+std::vector<Mesh*> Mesh::LoadMeshes(std::string path) {
+	if (importer == NULL)
+		importer = new Assimp::Importer();
+	const aiScene* scene = importer->ReadFile(path, aiProcess_CalcTangentSpace |
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices |
+		aiProcess_SortByPType);
+	std::vector<Mesh*> meshes;
+	if (!scene)
+	{
+		std::cout << "Failed to load: " << path << importer->GetErrorString() << std::endl;
+		return meshes;
+	}
+
+	aiNode* node = scene->mRootNode;
+	ProccesNode(scene, node, &meshes);
+	delete scene;
+	return meshes;
+}
+
+void Mesh::ProccesNode(const aiScene* scene, aiNode* node, std::vector<Mesh*>* meshes)
+{
+	std::vector<Vertex> vertices;
+	for (int m = 0; m < node->mNumMeshes; m++) {
+		for (int i = 0; i < scene->mMeshes[node->mMeshes[m]]->mNumVertices; i++)
+		{
+			aiVector3D vector = scene->mMeshes[node->mMeshes[m]]->mVertices[i];
+			aiVector3D uv = scene->mMeshes[node->mMeshes[m]]->mTextureCoords[0][i];
+			Vertex v;
+			v.position = glm::vec3(vector.x, vector.y, vector.z);
+			std::cout << uv.x << "," << uv.y << std::endl;
+			v.uv = glm::vec2(uv.x, uv.y);
+			vertices.push_back(v);
+		}
+		scene->mMeshes[m]->mVertices;
+
+		std::vector<unsigned int> indices;
+		for (int i = 0; i < scene->mMeshes[node->mMeshes[m]]->mNumFaces; i++)
+		{
+			aiFace face = scene->mMeshes[node->mMeshes[m]]->mFaces[i];
+			for (int f = 0; f < face.mNumIndices; f++)
+			{
+				indices.push_back((unsigned int)face.mIndices[f]);
+			}
+		}
+
+		Mesh* mesh = new Mesh(vertices, indices);
+		meshes->push_back(mesh);
+	}
+
+
+
+	for (int i = 0; i < node->mNumChildren; i++)
+	{
+		ProccesNode(scene, node->mChildren[i], meshes);
+	}
 }

@@ -88,12 +88,16 @@ public:
 	Shader* shader;
 
 	static Mesh* LoadMesh(std::string path);
+	static void ProccesNode(const aiScene * scene, aiNode * node, std::vector<Mesh*>* meshes);
+	static std::vector<Mesh*> LoadMeshes(std::string path);
+
 
 	std::vector<Vertex> Vertices() { return vertices; }
 	std::vector<unsigned int> Indices() { return indices; }
+	std::vector<Mesh*> childMeshes;
 
 private:
-	static Assimp::Importer importer;
+	static Assimp::Importer* importer;
 	GLuint vertexArrayID;
 	GLuint vertexBuffer;
 	GLuint elementBuffer;

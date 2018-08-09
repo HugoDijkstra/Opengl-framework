@@ -27,9 +27,10 @@ find_package(OpenGL REQUIRED)
 
 add_subdirectory("externals")
 
+SET_PROPERTY( TARGET assimp PROPERTY DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX} )
+
 include_directories(
 	${CMAKE_SOURCE_DIR}/externals/glfw-3.2.1/include/GLFW
-  ${CMAKE_SOURCE_DIR}/externals/assimp-4.1.0/include
   ${CMAKE_SOURCE_DIR}/externals/glad/include
   ${CMAKE_SOURCE_DIR}/externals/glm-0.9.9.0
   ${CMAKE_SOURCE_DIR}/externals
@@ -44,9 +45,9 @@ link_directories(
   ${CMAKE_SOURCE_DIR}/externals/glad
   ${CMAKE_SOURCE_DIR}/externals
   ${CMAKE_SOURCE_DIR}/engine
+	${Assimp_SOURCE_DIR}
   ${Assimp_BINARY_DIR}/code/
   ${Assimp_BINARY_DIR}
-  
 )
 
 set(LIBS
