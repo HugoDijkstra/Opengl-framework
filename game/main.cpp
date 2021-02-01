@@ -10,7 +10,7 @@ int main()
 	s.SetVector3("ColorIn", 1, 1, 1);
 	Texture t("assets/uvTest.jpg");
 	s.SetInt("textureIn", 0);
-	std::vector<Mesh*> mesh = Mesh::LoadMeshes("assets/cube.obj");
+	std::vector<Mesh*> mesh = Mesh::LoadMeshes("assets/armadillo.obj");
 	for (int i = 0; i < mesh.size(); i++)
 	{
 		mesh[i]->shader = &s;

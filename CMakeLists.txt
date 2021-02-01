@@ -57,7 +57,6 @@ set(LIBS
   soil
   GLAD
   assimp
-  assimp-vc140-mt
   ${ASSIMP_LIBRARIES}
 )
 

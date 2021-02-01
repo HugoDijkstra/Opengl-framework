@@ -1,6 +1,3 @@
-if(MSVC AND NOT "${MSVC_VERSION}" LESS 1400)
-	add_definitions( "/MP" )
-endif()
 
 #GLFW_321
 add_subdirectory(glfw-3.2.1)
