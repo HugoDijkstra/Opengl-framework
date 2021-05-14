@@ -2,7 +2,6 @@
 #define _INPUT
 
 #include <glfw3.h>
-
 class Input {
 public:
 
@@ -11,11 +10,17 @@ public:
 
 	static Input* GetInstance()
 	{
-
+		if(input == NULL)
+		{
+			input = new Input();
+		}
+		return input;
 	}
 private:
 	Input();
 	virtual ~Input();
+
+	
 
 	static Input* input;
 	float deltaTime;

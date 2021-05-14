@@ -16,8 +16,6 @@ if(UNIX)
 	#set(CMAKE_CXX_FLAGS "-Wall -pg -std=c++11")
 endif(UNIX)
 
-
-
 if(WIN32)
 	# suppress pedantic warnings
 	add_definitions( "/W1 /D_CRT_SECURE_NO_WARNINGS /wd4514 /nologo" )
@@ -27,10 +25,8 @@ find_package(OpenGL REQUIRED)
 
 add_subdirectory("externals")
 
-SET_PROPERTY( TARGET assimp PROPERTY DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX} )
-
 include_directories(
-	${CMAKE_SOURCE_DIR}/externals/glfw-3.2.1/include/GLFW
+	${CMAKE_SOURCE_DIR}/externals/glfw-3.3.4/include/GLFW
   ${CMAKE_SOURCE_DIR}/externals/glad/include
   ${CMAKE_SOURCE_DIR}/externals/glm-0.9.9.0
   ${CMAKE_SOURCE_DIR}/externals
@@ -41,7 +37,7 @@ include_directories(
 )
 
 link_directories(
-  ${CMAKE_SOURCE_DIR}/externals/glfw-3.2.1/src
+  ${CMAKE_SOURCE_DIR}/externals/glfw-3.3.4/src
   ${CMAKE_SOURCE_DIR}/externals/glad
   ${CMAKE_SOURCE_DIR}/externals
   ${CMAKE_SOURCE_DIR}/engine

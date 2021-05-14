@@ -250,14 +250,17 @@ void Mesh::ProccesNode(const aiScene* scene, aiNode* node, std::vector<Mesh*>* m
 {
 	std::vector<Vertex> vertices;
 	for (int m = 0; m < node->mNumMeshes; m++) {
+		std::cout << "Handling mesh: " << m << std::endl;
 		for (int i = 0; i < scene->mMeshes[node->mMeshes[m]]->mNumVertices; i++)
 		{
-			aiVector3D vector = scene->mMeshes[node->mMeshes[m]]->mVertices[i];
-			aiVector3D uv = scene->mMeshes[node->mMeshes[m]]->mTextureCoords[0][i];
 			Vertex v;
+			aiVector3D vector = scene->mMeshes[node->mMeshes[m]]->mVertices[i];
 			v.position = glm::vec3(vector.x, vector.y, vector.z);
-			std::cout << uv.x << "," << uv.y << std::endl;
-			v.uv = glm::vec2(uv.x, uv.y);
+			if(scene->mMeshes[node->mMeshes[m]]->mTextureCoords[0] != NULL){
+				aiVector3D uv = scene->mMeshes[node->mMeshes[m]]->mTextureCoords[0][i];
+				std::cout << uv.x << "," << uv.y << std::endl;
+				v.uv = glm::vec2(uv.x, uv.y);
+			}
 			vertices.push_back(v);
 		}
 		scene->mMeshes[m]->mVertices;

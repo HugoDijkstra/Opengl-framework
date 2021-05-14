@@ -1,11 +1,17 @@
 
 #GLFW_321
-add_subdirectory(glfw-3.2.1)
+add_subdirectory(glfw-3.3.4)
 #Assimp
-add_subdirectory(assimp-4.1.0)
+# set variables that are needed
+set(ZLIB_LIBRARIES zlibstatic)
+set(ENABLE_BOOST_WORKAROUND ON)
+set(BUILD_STATIC_LIB ON)
+set(BUILD_ASSIMP_TOOLS  ON)
+set(ASSIMP_BUILD_STATIC_LIB ON)
+add_subdirectory(assimp-5.0.1)
 
 include_directories(
-    glfw-3.2.1/include/GLFW
+    glfw-3.3.4/include/GLFW
     glew-2.1.0/include/
 	${Assimp_SOURCE_DIR}/include
     ${Assimp_SOURCE_DIR}/code

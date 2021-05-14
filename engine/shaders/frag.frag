@@ -8,5 +8,5 @@ uniform vec3 ColorIn;
 uniform sampler2D textureIn;
 
 void main() {
- color = texture(textureIn, UV).rgb;
+ color = pos;
 }
