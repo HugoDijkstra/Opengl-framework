@@ -7,15 +7,18 @@ Shader::Shader()
 	properties.clear();
 }
 
-GLuint Shader::GetPropertyID(std::string propertyName) {
-	if (properties.size() > 0) {
+GLuint Shader::GetPropertyID(std::string propertyName)
+{
+	if (properties.size() > 0)
+	{
 		std::map<std::string, GLuint>::iterator it = properties.find(propertyName);
 		GLuint location;
 		if (it == properties.end())
 		{
 			GLuint locationID = glGetUniformLocation(shaderID, propertyName.c_str());
 
-			if (locationID == -1) {
+			if (locationID == -1)
+			{
 				std::cout << "Could not find property: " << propertyName << " in shader " << name << std::endl;
 				return -1;
 			}
@@ -34,7 +37,8 @@ GLuint Shader::GetPropertyID(std::string propertyName) {
 	{
 		GLuint locationID = glGetUniformLocation(shaderID, propertyName.c_str());
 
-		if (locationID == -1) {
+		if (locationID == -1)
+		{
 			std::cout << "Could not find property: " << propertyName << " in shader " << name << std::endl;
 			return -1;
 		}
@@ -83,7 +87,6 @@ Renderer::Renderer()
 	camera.eulerRotation = Vector3(0, 0, 0);
 	camera.Update();
 	glEnable(GL_CULL_FACE);
-	
 }
 
 Renderer::~Renderer()
@@ -100,7 +103,7 @@ void Renderer::SwapBuffer()
 	camera.Update();
 }
 
-void Renderer::RenderMesh(Mesh* mesh, glm::mat4 mvp)
+void Renderer::RenderMesh(Mesh *mesh, glm::mat4 mvp)
 {
 	//Setup
 	glm::mat4 _mvp = projectionMatrix * camera.cameraMatrix * glm::mat4(1);
@@ -109,8 +112,8 @@ void Renderer::RenderMesh(Mesh* mesh, glm::mat4 mvp)
 	s.Use();
 	s.SetMatrix4("MVP", _mvp);
 
-
-	if (mesh->Vertices().size() != 0) {
+	if (mesh->Vertices().size() != 0)
+	{
 		//Render
 		glBindVertexArray(mesh->VertexArrayID());
 		glDrawElements(GL_TRIANGLES, mesh->Indices().size(), GL_UNSIGNED_INT, 0);
@@ -147,7 +150,8 @@ void Renderer::CreateShader(std::string shaderName, std::string vertexPath, std:
 	shaders.emplace(shaderName, s);
 }
 
-GLuint Renderer::LoadShaders(const char * vertex_file_path, const char * fragment_file_path) {
+GLuint Renderer::LoadShaders(const char *vertex_file_path, const char *fragment_file_path)
+{
 
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -156,13 +160,15 @@ GLuint Renderer::LoadShaders(const char * vertex_file_path, const char * fragmen
 	// Read the Vertex Shader code from the file
 	std::string VertexShaderCode;
 	std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
-	if (VertexShaderStream.is_open()) {
+	if (VertexShaderStream.is_open())
+	{
 		std::stringstream sstr;
 		sstr << VertexShaderStream.rdbuf();
 		VertexShaderCode = sstr.str();
 		VertexShaderStream.close();
 	}
-	else {
+	else
+	{
 		printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
 		getchar();
 		return 0;
@@ -171,7 +177,8 @@ GLuint Renderer::LoadShaders(const char * vertex_file_path, const char * fragmen
 	// Read the Fragment Shader code from the file
 	std::string FragmentShaderCode;
 	std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
-	if (FragmentShaderStream.is_open()) {
+	if (FragmentShaderStream.is_open())
+	{
 		std::stringstream sstr;
 		sstr << FragmentShaderStream.rdbuf();
 		FragmentShaderCode = sstr.str();
@@ -183,14 +190,15 @@ GLuint Renderer::LoadShaders(const char * vertex_file_path, const char * fragmen
 
 	// Compile Vertex Shader
 	printf("Compiling shader : %s\n", vertex_file_path);
-	char const * VertexSourcePointer = VertexShaderCode.c_str();
+	char const *VertexSourcePointer = VertexShaderCode.c_str();
 	glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
 	glCompileShader(VertexShaderID);
 
 	// Check Vertex Shader
 	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
 	glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	if (InfoLogLength > 0) {
+	if (InfoLogLength > 0)
+	{
 		std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
 		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
 		printf("%s\n", &VertexShaderErrorMessage[0]);
@@ -198,14 +206,15 @@ GLuint Renderer::LoadShaders(const char * vertex_file_path, const char * fragmen
 
 	// Compile Fragment Shader
 	printf("Compiling shader : %s\n", fragment_file_path);
-	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
+	char const *FragmentSourcePointer = FragmentShaderCode.c_str();
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
 	glCompileShader(FragmentShaderID);
 
 	// Check Fragment Shader
 	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
 	glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	if (InfoLogLength > 0) {
+	if (InfoLogLength > 0)
+	{
 		std::vector<char> FragmentShaderErrorMessage(InfoLogLength + 1);
 		glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
 		printf("%s\n", &FragmentShaderErrorMessage[0]);
@@ -221,7 +230,8 @@ GLuint Renderer::LoadShaders(const char * vertex_file_path, const char * fragmen
 	// Check the program
 	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
 	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	if (InfoLogLength > 0) {
+	if (InfoLogLength > 0)
+	{
 		std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
 		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
 		printf("%s\n", &ProgramErrorMessage[0]);

@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.0)
-project(openglFramework)
+cmake_minimum_required(VERSION 3.10)
+project(hugworks)
 
 
 OPTION(BUILD_SHARED_LIBS OFF)
@@ -9,7 +9,6 @@ if(UNIX)
 	#set(CMAKE_CXX_FLAGS "-Wall -Wstrict-aliasing -std=c++0x -O2")
 
 	set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -O2")
-
 	# valgrind --leak-check=full ./demo
 	# ./demo # creates cmon.out
 	# gprof demo gmon.out > analysis.txt

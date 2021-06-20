@@ -13,6 +13,7 @@
 
 //engine includes
 #include <vector3.h>
+#include <utils.hpp>
 
 class Texture {
 public:

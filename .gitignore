@@ -331,3 +331,5 @@ ASALocalRun/
 .mfractor/
 /_build
 /build
+
+.ionide

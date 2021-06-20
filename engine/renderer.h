@@ -11,7 +11,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
-#include <map> 
+#include <map>
 
 //include glew first
 #include <glad.h>
@@ -26,7 +26,8 @@
 #include <mesh.h>
 #include <vector3.h>
 
-class Shader {
+class Shader
+{
 public:
 	Shader();
 	//Variables
@@ -35,7 +36,8 @@ public:
 	std::map<std::string, GLuint> properties;
 
 	//Functions
-	void Use() {
+	void Use()
+	{
 		//std::cout << "Now using: " << name << std::endl;
 		glUseProgram(shaderID);
 	}
@@ -48,7 +50,6 @@ public:
 			return;
 		}
 		glUniform1i(location, i);
-
 	}
 
 	void SetVector3(std::string propertyName, int x, int y, int z)
@@ -70,12 +71,13 @@ public:
 		}
 		glUniformMatrix4fv(location, 1, GL_FALSE, &i[0][0]);
 	}
+
 private:
 	GLuint GetPropertyID(std::string propertyName);
-
 };
 
-class Camera {
+class Camera
+{
 public:
 	Vector3 position;
 	Vector3 eulerRotation;
@@ -85,9 +87,9 @@ public:
 	void Update()
 	{
 		cameraMatrix = glm::lookAt(
-			glm::vec3(sin(glfwGetTime()/3.1415) *8,2,cos(glfwGetTime()/3.1415)*8), // Camera is at (4,3,3), in World Space
-			glm::vec3(0, 2, 0), // and looks at the origin
-			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+			glm::vec3(sin(glfwGetTime() / 3.1415) * 15, 2, cos(glfwGetTime() / 3.1415) * 15), // Camera is at (4,3,3), in World Space
+			glm::vec3(0, 2, 0),																// and looks at the origin
+			glm::vec3(0, 1, 0)																// Head is up (set to 0,-1,0 to look upside-down)
 		);
 	}
 
@@ -102,20 +104,18 @@ public:
 	~Renderer();
 
 	void SwapBuffer();
-	void RenderMesh(Mesh * mesh, glm::mat4 mvp);
+	void RenderMesh(Mesh *mesh, glm::mat4 mvp);
 	Camera camera;
 	Shader GetShader(std::string name);
-	GLFWwindow* Window() { return window; }
+	GLFWwindow *Window() { return window; }
 	void CreateShader(std::string shaderName, std::string vertexPath, std::string fragmentPath);
 	glm::mat4 ProjectionMatrix() { return projectionMatrix; }
+
 private:
 	glm::mat4 projectionMatrix;
-	GLuint LoadShaders(const char* vertex_file_path, const char*  fragment_file_path);
-	GLFWwindow* window;
-	std::map <std::string, Shader> shaders;
+	GLuint LoadShaders(const char *vertex_file_path, const char *fragment_file_path);
+	GLFWwindow *window;
+	std::map<std::string, Shader> shaders;
 };
-
-
-
 
 #endif // !_RENDERER

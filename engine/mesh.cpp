@@ -2,8 +2,8 @@
 
 Assimp::Importer *Mesh::importer = NULL;
 
-
-std::vector<std::string> Split(std::string str, char splitAt) {
+std::vector<std::string> Split(std::string str, char splitAt)
+{
 	std::vector<std::string> toReturn;
 	std::string currentString = "";
 	for (int i = 0; i < str.length(); i++)
@@ -20,7 +20,6 @@ std::vector<std::string> Split(std::string str, char splitAt) {
 	}
 	toReturn.push_back(currentString);
 	return toReturn;
-
 }
 Mesh::Mesh()
 {
@@ -29,7 +28,7 @@ Mesh::Mesh()
 	elementBuffer = 0;
 }
 
-Mesh::Mesh(Shader * s)
+Mesh::Mesh(Shader *s)
 {
 	glGenVertexArrays(1, &vertexArrayID);
 	glBindVertexArray(vertexArrayID);
@@ -56,17 +55,16 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
-
 	//Set vertex atribbs
 	//vertex
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, position));
 	//normals
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
 	//uv
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, uv));
 
 	glBindVertexArray(0);
 
@@ -173,7 +171,7 @@ void Mesh::Draw()
 {
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glDisableVertexAttribArray(0);
 }
@@ -182,14 +180,14 @@ void Mesh::SetVertices(std::vector<GLfloat> vertices)
 {
 }
 
-Mesh * Mesh::LoadMesh(std::string path)
+Mesh *Mesh::LoadMesh(std::string path)
 {
 	if (importer == NULL)
 		importer = new Assimp::Importer();
-	const aiScene* scene = importer->ReadFile(path, aiProcess_CalcTangentSpace |
-		aiProcess_Triangulate |
-		aiProcess_JoinIdenticalVertices |
-		aiProcess_SortByPType);
+	const aiScene *scene = importer->ReadFile(path, aiProcess_CalcTangentSpace |
+														aiProcess_Triangulate |
+														aiProcess_JoinIdenticalVertices |
+														aiProcess_SortByPType);
 
 	if (!scene)
 	{
@@ -202,7 +200,8 @@ Mesh * Mesh::LoadMesh(std::string path)
 		aiVector3D vector = scene->mMeshes[0]->mVertices[i];
 		Vertex v;
 		v.position = glm::vec3(vector.x, vector.y, vector.z);
-		if (scene->mMeshes[0]->mTextureCoords[0]) {
+		if (scene->mMeshes[0]->mTextureCoords[0])
+		{
 			aiVector3D uv = scene->mMeshes[0]->mTextureCoords[0][i];
 			v.uv = glm::vec2(uv.x, uv.y);
 		}
@@ -220,50 +219,50 @@ Mesh * Mesh::LoadMesh(std::string path)
 		}
 	}
 
-	Mesh* mesh = new Mesh(vertices, indices);
+	Mesh *mesh = new Mesh(vertices, indices);
 	;
 	delete scene;
 	return mesh;
 }
 
-std::vector<Mesh*> Mesh::LoadMeshes(std::string path) {
+std::vector<Mesh *> Mesh::LoadMeshes(std::string path)
+{
 	if (importer == NULL)
 		importer = new Assimp::Importer();
-	const aiScene* scene = importer->ReadFile(path, aiProcess_CalcTangentSpace |
-		aiProcess_Triangulate |
-		aiProcess_JoinIdenticalVertices |
-		aiProcess_SortByPType);
-	std::vector<Mesh*> meshes;
+	const aiScene *scene = importer->ReadFile(path, aiProcess_CalcTangentSpace |
+														aiProcess_Triangulate |
+														aiProcess_JoinIdenticalVertices |
+														aiProcess_SortByPType);
+	std::vector<Mesh *> meshes;
 	if (!scene)
 	{
 		std::cout << "Failed to load: " << path << importer->GetErrorString() << std::endl;
 		return meshes;
 	}
 
-	aiNode* node = scene->mRootNode;
+	aiNode *node = scene->mRootNode;
 	ProccesNode(scene, node, &meshes);
 	delete scene;
 	return meshes;
 }
 
-void Mesh::ProccesNode(const aiScene* scene, aiNode* node, std::vector<Mesh*>* meshes)
+void Mesh::ProccesNode(const aiScene *scene, aiNode *node, std::vector<Mesh *> *meshes)
 {
-	std::vector<Vertex> vertices;
-	for (int m = 0; m < node->mNumMeshes; m++) {
-		std::cout << "Handling mesh: " << m << std::endl;
+	for (int m = 0; m < node->mNumMeshes; m++)
+	{
+		std::vector<Vertex> vertices;
 		for (int i = 0; i < scene->mMeshes[node->mMeshes[m]]->mNumVertices; i++)
 		{
 			Vertex v;
 			aiVector3D vector = scene->mMeshes[node->mMeshes[m]]->mVertices[i];
 			v.position = glm::vec3(vector.x, vector.y, vector.z);
-			if(scene->mMeshes[node->mMeshes[m]]->mTextureCoords[0] != NULL){
+			if (scene->mMeshes[node->mMeshes[m]]->mTextureCoords[0] != NULL)
+			{
 				aiVector3D uv = scene->mMeshes[node->mMeshes[m]]->mTextureCoords[0][i];
-				std::cout << uv.x << "," << uv.y << std::endl;
 				v.uv = glm::vec2(uv.x, uv.y);
 			}
 			vertices.push_back(v);
 		}
-		scene->mMeshes[m]->mVertices;
 
 		std::vector<unsigned int> indices;
 		for (int i = 0; i < scene->mMeshes[node->mMeshes[m]]->mNumFaces; i++)
@@ -275,11 +274,9 @@ void Mesh::ProccesNode(const aiScene* scene, aiNode* node, std::vector<Mesh*>* m
 			}
 		}
 
-		Mesh* mesh = new Mesh(vertices, indices);
+		Mesh *mesh = new Mesh(vertices, indices);
 		meshes->push_back(mesh);
 	}
-
-
 
 	for (int i = 0; i < node->mNumChildren; i++)
 	{

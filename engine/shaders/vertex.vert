@@ -6,9 +6,9 @@ layout(location = 2) in vec2 vertexUV;
 
 uniform vec3 ColorIn;
 uniform mat4 MVP;
-
 out vec2 UV;
 out vec3 pos;
+
 void main()
 {
   vec3 vert = vertexPosition_modelspace.xyz;
