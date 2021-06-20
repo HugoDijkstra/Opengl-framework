@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _RENDERER
 #define _RENDERER
 
@@ -86,11 +87,7 @@ public:
 
 	void Update()
 	{
-		cameraMatrix = glm::lookAt(
-			glm::vec3(sin(glfwGetTime() / 3.1415) * 15, 2, cos(glfwGetTime() / 3.1415) * 15), // Camera is at (4,3,3), in World Space
-			glm::vec3(0, 2, 0),																// and looks at the origin
-			glm::vec3(0, 1, 0)																// Head is up (set to 0,-1,0 to look upside-down)
-		);
+		cameraMatrix = glm::translate(glm::mat4(1), glm::vec3(position)) * glm::eulerAngleXYZ(eulerRotation.x, eulerRotation.y, eulerRotation.z);
 	}
 
 private:
@@ -104,17 +101,17 @@ public:
 	~Renderer();
 
 	void SwapBuffer();
-	void RenderMesh(Mesh *mesh, glm::mat4 mvp);
+	void RenderMesh(Mesh* mesh, glm::mat4 mvp);
 	Camera camera;
 	Shader GetShader(std::string name);
-	GLFWwindow *Window() { return window; }
+	GLFWwindow* Window() { return window; }
 	void CreateShader(std::string shaderName, std::string vertexPath, std::string fragmentPath);
 	glm::mat4 ProjectionMatrix() { return projectionMatrix; }
 
 private:
 	glm::mat4 projectionMatrix;
-	GLuint LoadShaders(const char *vertex_file_path, const char *fragment_file_path);
-	GLFWwindow *window;
+	GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path);
+	GLFWwindow* window;
 	std::map<std::string, Shader> shaders;
 };
 

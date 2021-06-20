@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _VECTOR3
 #define _VECTOR3
 
@@ -29,7 +30,9 @@ public:
 
 	Vector3 &operator*=(const float oth);
 
-	Vector3 operator+(const Vector3 &oth);
+	Vector3 operator+(const Vector3& oth);
+
+	Vector3 operator=(const Vector3 &oth);
 
 	Vector3 operator-(const Vector3 &oth);
 

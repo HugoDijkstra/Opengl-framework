@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _TEXTURE
 #define _TEXTURE
 

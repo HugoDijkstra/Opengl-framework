@@ -81,6 +81,11 @@ Vector3 Vector3::operator+(const Vector3 & oth)
 	return Vector3(x + oth.x, y + oth.y, z + oth.z);
 }
 
+Vector3 Vector3::operator=(const Vector3& oth)
+{
+	return Vector3(oth.x,oth.y,oth.z);
+}
+
 Vector3 Vector3::operator-(const Vector3 & oth)
 {
 	return Vector3(x - oth.x, y - oth.y, z - oth.z);

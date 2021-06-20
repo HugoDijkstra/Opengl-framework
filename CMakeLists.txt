@@ -67,6 +67,8 @@ add_library(engine
 	engine/utils.hpp
   engine/vector3.cpp
   engine/vector3.h
+  engine/shaders/frag.frag
+  engine/shaders/vertex.vert
 )
 
 add_executable(game
